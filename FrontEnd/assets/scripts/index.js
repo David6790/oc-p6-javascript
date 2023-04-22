@@ -1,18 +1,5 @@
 // Pointer la classe gallery sur le DOM
 const sectionGallery = document.querySelector(".gallery");
-
-// Pointer le bouton filtre Tous les projets
-const btnAllWorks = document.getElementById("allWorks");
-
-// Pointer le bouton filtre objet
-const btnObjectWorks = document.getElementById("objectWorks");
-
-// Pointer le bouton filtre appartement
-const btnAppartmentWorks = document.getElementById("appartmentWorks");
-
-//Pointer le bouton filtre hotel
-const btnHotelWorks = document.getElementById("hotelWorks");
-
 //Pointer tout les filtres
 const boutonFiltre = document.querySelectorAll(".btn-filtre");
 
@@ -46,18 +33,14 @@ const showWorks = async () => {
 
 showWorks();
 
-const filterWorks = (selectedCategory) => {
+const showFilterWorks = (selectedCategory) => {
   if (selectedCategory === 0) {
     workToDisplay = workData;
-    console.log("reussi");
   } else {
     workToDisplay = workData.filter(function (workData) {
       return workData.categoryId === selectedCategory;
     });
   }
-};
-
-const showFilterWorks = () => {
   sectionGallery.innerHTML = workToDisplay
     .map(
       (workToDisplay) => ` 
@@ -72,7 +55,6 @@ const showFilterWorks = () => {
 
 boutonFiltre.forEach(function (button, index) {
   button.addEventListener("click", function () {
-    filterWorks(index);
-    showFilterWorks();
+    showFilterWorks(index);
   });
 });
