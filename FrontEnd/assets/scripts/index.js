@@ -6,12 +6,15 @@ let workToDisplay = [];
 // creation variable pour indiquer la catégorie du work
 let selectedCategory = 0;
 
+let userLoggedIn = sessionStorage.getItem("token");
+
 // Pointer la classe gallery sur le DOM
 const sectionGallery = document.querySelector(".gallery");
 //Pointer tout les filtres
 const boutonFiltre = document.querySelectorAll(".btn-filtre");
-
 // creation de la fonction getWork qui ira chercher les données dans l'API. Et nous stock ces données sous forme de JSON dans le tableau work data
+const sectionFiltres = document.querySelector(".filtres");
+
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
     .then((res) => res.json())
@@ -57,8 +60,12 @@ const showFilterWorks = (selectedCategory) => {
 };
 
 // création d'une boucle foreach pour ajouter des eventListner à l'ensemble des bouttons.
-boutonFiltre.forEach((button) => {
-  button.addEventListener("click", function () {
-    showFilterWorks(parseInt(button.getAttribute("id")));
+if (userLoggedIn) {
+  sectionFiltres.innerHTML = "";
+} else {
+  boutonFiltre.forEach((button) => {
+    button.addEventListener("click", function () {
+      showFilterWorks(parseInt(button.getAttribute("id")));
+    });
   });
-});
+}

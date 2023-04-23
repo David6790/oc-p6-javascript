@@ -1,5 +1,6 @@
 let formLogin = document.getElementById("formLogin");
 let token = "";
+
 const test = async () => {
   let userMail = document.getElementById("email").value;
   let userPassword = document.getElementById("password").value;
@@ -20,8 +21,8 @@ const test = async () => {
 
   console.log(token);
   if (token) {
-    localStorage.setItem("token", token);
-    //window.location.replace("./index.html");
+    sessionStorage.setItem("token", token);
+    window.location.replace("./index.html");
     console.log("token retrouvé");
   } else {
     alert("Identifiant ou mot de passe incorrect! ");
