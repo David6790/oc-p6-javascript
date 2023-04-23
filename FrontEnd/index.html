@@ -9,16 +9,26 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
+	<script src="https://kit.fontawesome.com/78f3416a1d.js" crossorigin="anonymous"></script>
 </head>
 <body>
+	<div id="modeEditionHeader">
+		<div class="modeEditionText">
+			<i class="fa-regular fa-pen-to-square"></i> 
+			<div>Mode Édition</div>
+		</div>
+		
+		<button type="button" id="submitChanges">Publier les changements</button>
+	</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
 			<li><a href="#portofolio">projets</a></li>
 			<li><a href="#contact">contact</a></li>
-			<li><a href="./login_page.html">login</a></li>
-			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+			<li><a href="./login_page.html" id="buttonLogIn">login</a></li>
+			<li><a href="#" id="buttonLogOut">logout</a></li>
+			<li><a href=""><img src="./assets/icons/instagram.png" alt="Instagram"></a></li>
 		</ul>
 	</nav>
 </header>
@@ -26,6 +36,13 @@
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
+			<div id="buttonChangePicture">
+				<button>
+					<i class="fa-regular fa-pen-to-square"></i> 
+					<span>Mode Édition</span>
+				</button>
+			</div>
+			
 		</figure>
 		<article>
 			<h2>Designer d'espace</h2>
@@ -35,7 +52,12 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<div class="projetHeader">
+			<h2>Mes Projets</h2> 
+			<button id="buttonModifyProject">
+				<span><i class="fa-regular fa-pen-to-square"></i>Modifier</span>
+			</button>	
+		</div>
 		<div class="filtres">
 			<button class="btn-filtre" id="0">Tous</button>
 			<button class="btn-filtre" id="1">Objects</button>

@@ -2,18 +2,16 @@
 let workData = [];
 // creation d'un Array pour y stocker les works à afficher
 let workToDisplay = [];
-
-// creation variable pour indiquer la catégorie du work
 let selectedCategory = 0;
-
 let userLoggedIn = sessionStorage.getItem("token");
-
-// Pointer la classe gallery sur le DOM
 const sectionGallery = document.querySelector(".gallery");
-//Pointer tout les filtres
 const boutonFiltre = document.querySelectorAll(".btn-filtre");
-// creation de la fonction getWork qui ira chercher les données dans l'API. Et nous stock ces données sous forme de JSON dans le tableau work data
 const sectionFiltres = document.querySelector(".filtres");
+const modeEditionHeader = document.getElementById("modeEditionHeader");
+const buttonChangePicture = document.getElementById("buttonChangePicture");
+const buttonModifyProject = document.getElementById("buttonModifyProject");
+const buttonLogIn = document.getElementById("buttonLogIn");
+const buttonLogOut = document.getElementById("buttonLogOut");
 
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
@@ -35,6 +33,7 @@ const showWorks = async () => {
     )
     .join("");
 };
+
 // un premier appel de la fonction showWorks pour afficher tout les travaux a l'ecran lors du chargement
 showWorks();
 
@@ -58,14 +57,22 @@ const showFilterWorks = (selectedCategory) => {
     )
     .join("");
 };
+buttonLogOut.addEventListener("click", function () {
+  sessionStorage.clear();
+  window.location.reload();
+});
 
-// création d'une boucle foreach pour ajouter des eventListner à l'ensemble des bouttons.
 if (userLoggedIn) {
-  sectionFiltres.innerHTML = "";
+  sectionFiltres.remove();
+  buttonLogIn.remove();
 } else {
   boutonFiltre.forEach((button) => {
     button.addEventListener("click", function () {
       showFilterWorks(parseInt(button.getAttribute("id")));
     });
   });
+  modeEditionHeader.style.display = "none";
+  buttonLogOut.remove();
+  buttonChangePicture.remove();
+  buttonModifyProject.remove();
 }
