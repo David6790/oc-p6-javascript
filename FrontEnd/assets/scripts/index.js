@@ -57,6 +57,11 @@ const showFilterWorks = (selectedCategory) => {
     )
     .join("");
 };
+boutonFiltre.forEach((button) => {
+  button.addEventListener("click", function () {
+    showFilterWorks(parseInt(button.getAttribute("id")));
+  });
+});
 buttonLogOut.addEventListener("click", function () {
   sessionStorage.clear();
   window.location.reload();
@@ -66,11 +71,6 @@ if (userLoggedIn) {
   sectionFiltres.remove();
   buttonLogIn.remove();
 } else {
-  boutonFiltre.forEach((button) => {
-    button.addEventListener("click", function () {
-      showFilterWorks(parseInt(button.getAttribute("id")));
-    });
-  });
   modeEditionHeader.style.display = "none";
   buttonLogOut.remove();
   buttonChangePicture.remove();

@@ -126,7 +126,10 @@ nav li {
 	
 	font-size: 1.2em;
 }
-
+#buttonLogOut{
+	
+	margin-left:-20px;
+}
 li a:hover {
 	color: #B1663C;
 }
