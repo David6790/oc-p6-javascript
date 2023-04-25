@@ -55,3 +55,17 @@ const userLogin = () => {
 /***********************************************/
 
 userLogin();
+
+let postWorkParam = {
+  method: "POST",
+  headers: {
+    Accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MjQwMzgwNCwiZXhwIjoxNjgyNDkwMjA0fQ.P8qvfdGVo7eg39DbipLa7xOiFq2ThHKwNPpKhYoxpMY",
+    "Content-type": "multipart/form-data",
+  },
+  body: JSON.stringify({
+    email: userMail,
+    password: userPassword,
+  }),
+};

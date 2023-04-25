@@ -172,3 +172,5 @@ buttonCloseModalWorkUpload.addEventListener("click", function () {
 buttonBackToModal.addEventListener("click", function () {
   modalWorkUpload.style.display = "none";
 });
+
+/***************************************** Uploade file  *****************************************/
