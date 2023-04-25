@@ -115,3 +115,60 @@ showWorks(); // un premier appel de la fonction showWorks pour afficher tout les
 createFilterEventlistner(); // creation des eventListner
 changeConfiguration(); // chargement des config de disposition de la page
 EndAdminSession(); // possibilité de se deconnecter
+
+/***********************************************/
+
+// ------ ESSAIS SUR MODAL  ----------//
+
+/***********************************************/
+
+const modal = document.getElementById("modal");
+const buttonCloseModal = document.getElementById("closeModal");
+const buttonSendPicture = document.getElementById("sendPicture");
+const modalWorkUpload = document.getElementById("modalWorkUpload");
+const buttonCloseModalWorkUpload = document.getElementById(
+  "closeModalWorkUpload"
+);
+const buttonBackToModal = document.getElementById("backToModal");
+
+const modalOpenAndClose = () => {
+  buttonModifyProject.addEventListener("click", function () {
+    modal.style.display = "flex";
+  });
+  buttonCloseModal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+};
+
+modalOpenAndClose();
+
+const sectionGallery2 = document.querySelector(".gallery2");
+
+const showWorksInModal = async () => {
+  await getWorks();
+  sectionGallery2.innerHTML = workData
+    .map(
+      (work) => ` 
+    <figure>
+    <div class ="imgModal">
+    <img src= ${work.imageUrl} alt="${work.title}">
+    <i class="fa-solid fa-trash-can" id="deleteWork${work.id}"></i>
+    </div>
+    </figure>
+  `
+    )
+    .join("");
+};
+
+showWorksInModal();
+
+buttonSendPicture.addEventListener("click", function () {
+  modalWorkUpload.style.display = "flex";
+});
+buttonCloseModalWorkUpload.addEventListener("click", function () {
+  modalWorkUpload.style.display = "none";
+  modal.style.display = "none";
+});
+buttonBackToModal.addEventListener("click", function () {
+  modalWorkUpload.style.display = "none";
+});
