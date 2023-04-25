@@ -9,29 +9,26 @@ let token = "";
 
 /***********************************************/
 
-// ------ DÉCLARATION DES FONCTIONS ----------//
+// ------ DÉCLARATION DES VARIABLES ----------//
 
 /***********************************************/
 
-// Fonction pour chercher le Token sur l'API. On récupère les données saisi par l'utilisateur à travers le Formulaire. On stock ces infos dans des variables. Les varibales qu'on intègre dans la méthode POST. Si les identifiants sont reconnu, l'api nous renvoi un token. Un token qu'on stock dans la session storage, puis on redirige vers la page d'acceuil.
 const getToken = async () => {
-  let userMail = document.getElementById("email").value;
-  let userPassword = document.getElementById("password").value;
-  console.log(userMail + "   " + userPassword);
+  const myFormData = new FormData(formLogin);
+  const formDataObj = {};
+  myFormData.forEach((value, key) => (formDataObj[key] = value));
+  console.log(formDataObj);
   let loginParam = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      email: userMail,
-      password: userPassword,
-    }),
+    body: JSON.stringify(formDataObj),
   };
   await fetch("http://localhost:5678/api/users/login", loginParam)
     .then((res) => res.json())
     .then((data) => (token = data.token));
-
+  console.log(token);
   if (token) {
     sessionStorage.setItem("token", token);
     window.location.replace("./index.html");
@@ -40,32 +37,11 @@ const getToken = async () => {
   }
 };
 
-// fonction qui met en ecoute la validation du formulaire. avec un preventDefault pour eviter le rechargement par defaut de la page lors de la validation du formulaire.
-const userLogin = () => {
+const userLogIn = () => {
   formLogin.addEventListener("submit", function (e) {
     e.preventDefault();
     getToken();
   });
 };
 
-/***********************************************/
-
-// ------ Exécution des fonctions ----------//
-
-/***********************************************/
-
-userLogin();
-
-let postWorkParam = {
-  method: "POST",
-  headers: {
-    Accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MjQwMzgwNCwiZXhwIjoxNjgyNDkwMjA0fQ.P8qvfdGVo7eg39DbipLa7xOiFq2ThHKwNPpKhYoxpMY",
-    "Content-type": "multipart/form-data",
-  },
-  body: JSON.stringify({
-    email: userMail,
-    password: userPassword,
-  }),
-};
+userLogIn();
