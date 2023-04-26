@@ -9,21 +9,21 @@ let token = "";
 
 /***********************************************/
 
-// ------ DÉCLARATION DES VARIABLES ----------//
+// ------ DÉCLARATION DES FONCTIONS ----------//
 
 /***********************************************/
 
 const getToken = async () => {
-  const myFormData = new FormData(formLogin);
-  const formDataObj = {};
-  myFormData.forEach((value, key) => (formDataObj[key] = value));
-  console.log(formDataObj);
+  const userFormData = new FormData(formLogin);
+  const userFormDataObj = {};
+  userFormData.forEach((value, key) => (userFormDataObj[key] = value));
+  console.log(userFormDataObj);
   let loginParam = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(formDataObj),
+    body: JSON.stringify(userFormDataObj),
   };
   await fetch("http://localhost:5678/api/users/login", loginParam)
     .then((res) => res.json())

@@ -134,13 +134,17 @@ const buttonBackToModal = document.getElementById("backToModal");
 const modalOpenAndClose = () => {
   buttonModifyProject.addEventListener("click", function () {
     modal.style.display = "flex";
+    for (i = 0; i <= 30; i++) {
+      console.log(document.getElementById(`deleteWork${i}`));
+    }
+    //test.forEach((item) => {
+    //console.log(item.getAttribute("id"));
+    // });
   });
   buttonCloseModal.addEventListener("click", function () {
     modal.style.display = "none";
   });
 };
-
-modalOpenAndClose();
 
 const sectionGallery2 = document.querySelector(".gallery2");
 
@@ -152,7 +156,7 @@ const showWorksInModal = async () => {
     <figure>
     <div class ="imgModal">
     <img src= ${work.imageUrl} alt="${work.title}">
-    <i class="fa-solid fa-trash-can" id="deleteWork${work.id}"></i>
+    <i id="deleteWork${work.id}" class="fa-solid fa-trash-can"></i>
     </div>
     </figure>
   `
@@ -161,6 +165,7 @@ const showWorksInModal = async () => {
 };
 
 showWorksInModal();
+modalOpenAndClose();
 
 buttonSendPicture.addEventListener("click", function () {
   modalWorkUpload.style.display = "flex";
@@ -172,5 +177,34 @@ buttonCloseModalWorkUpload.addEventListener("click", function () {
 buttonBackToModal.addEventListener("click", function () {
   modalWorkUpload.style.display = "none";
 });
+/***************************************** Delete file  *****************************************/
 
 /***************************************** Uploade file  *****************************************/
+
+let formAddProject = document.getElementById("formAddProject");
+
+const postProject = () => {
+  formAddProject.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const projectImage = document.getElementById("image").files[0];
+    const projectCategory = document.getElementById("category").value;
+    const projectTitle = document.getElementById("title").value;
+    const workuploadFormData = new FormData();
+    workuploadFormData.append("title", projectTitle);
+    workuploadFormData.append("image", projectImage);
+    workuploadFormData.append("category", projectCategory);
+
+    let postParam = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+      body: workuploadFormData,
+    };
+    fetch("http://localhost:5678/api/works", postParam).then((res) =>
+      console.log(res)
+    );
+  });
+};
+
+postProject();
