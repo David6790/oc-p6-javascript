@@ -131,23 +131,6 @@ const buttonCloseModalWorkUpload = document.getElementById(
 );
 const buttonBackToModal = document.getElementById("backToModal");
 
-const modalOpenAndClose = () => {
-  buttonModifyProject.addEventListener("click", function () {
-    modal.style.display = "flex";
-    for (i = 0; i <= 30; i++) {
-      console.log(document.getElementById(`deleteWork${i}`));
-    }
-    //test.forEach((item) => {
-    //console.log(item.getAttribute("id"));
-    // });
-  });
-  buttonCloseModal.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-};
-
-const sectionGallery2 = document.querySelector(".gallery2");
-
 const showWorksInModal = async () => {
   await getWorks();
   sectionGallery2.innerHTML = workData
@@ -156,27 +139,52 @@ const showWorksInModal = async () => {
     <figure>
     <div class ="imgModal">
     <img src= ${work.imageUrl} alt="${work.title}">
-    <i id="deleteWork${work.id}" class="fa-solid fa-trash-can"></i>
+    <i id="deleteWork${work.id}" class="fa-solid fa-trash-can "></i>
     </div>
     </figure>
   `
     )
     .join("");
+  const test = document.getElementsByClassName("fa-solid fa-trash-can");
+  for (item of test) {
+    let categoryID = "";
+    categoryID = item.getAttribute("id").slice(10, 120);
+    console.log(categoryID);
+    item.addEventListener("click", function () {
+      fetch(`http://localhost:5678/api/works/${categoryID}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+    });
+  }
 };
 
-showWorksInModal();
+const modalOpenAndClose = () => {
+  buttonModifyProject.addEventListener("click", function () {
+    modal.style.display = "flex";
+    buttonSendPicture.addEventListener("click", function () {
+      modalWorkUpload.style.display = "flex";
+    });
+    buttonCloseModalWorkUpload.addEventListener("click", function () {
+      modalWorkUpload.style.display = "none";
+      modal.style.display = "none";
+    });
+    buttonBackToModal.addEventListener("click", function () {
+      modalWorkUpload.style.display = "none";
+    });
+    showWorksInModal();
+  });
+  buttonCloseModal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+};
+
+const sectionGallery2 = document.querySelector(".gallery2");
+
 modalOpenAndClose();
 
-buttonSendPicture.addEventListener("click", function () {
-  modalWorkUpload.style.display = "flex";
-});
-buttonCloseModalWorkUpload.addEventListener("click", function () {
-  modalWorkUpload.style.display = "none";
-  modal.style.display = "none";
-});
-buttonBackToModal.addEventListener("click", function () {
-  modalWorkUpload.style.display = "none";
-});
 /***************************************** Delete file  *****************************************/
 
 /***************************************** Uploade file  *****************************************/
