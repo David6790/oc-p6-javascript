@@ -1,3 +1,13 @@
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+
+// ---------------------------------- FONCTIONALITÉ PAGE D'ACCEUIL -----------------------------------------------------------//
+
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+
 /***********************************************/
 
 // ------ DÉCLARATION DES VARIABLES ----------//
@@ -116,20 +126,44 @@ createFilterEventlistner(); // creation des eventListner
 changeConfiguration(); // chargement des config de disposition de la page
 EndAdminSession(); // possibilité de se deconnecter
 
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+
+// ----------------------------------------- FONCTIONALITÉS MODAL -----------------------------------------------------------//
+
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+/**************************************************************************************************************************/
+
 /***********************************************/
 
-// ------ ESSAIS SUR MODAL  ----------//
+// ------ DECLARATION DES VARIABLES ----------//
 
 /***********************************************/
 
+/*********** Poitage de tout les élements concernant la modal necessaires pour les fonctions plus bas ***********/
 const modal = document.getElementById("modal");
+const modalWorkUpload = document.getElementById("modalWorkUpload");
+const sectionGallery2 = document.querySelector(".gallery2");
 const buttonCloseModal = document.getElementById("closeModal");
 const buttonSendPicture = document.getElementById("sendPicture");
-const modalWorkUpload = document.getElementById("modalWorkUpload");
 const buttonCloseModalWorkUpload = document.getElementById(
   "closeModalWorkUpload"
 );
 const buttonBackToModal = document.getElementById("backToModal");
+const buttonDelete = document.getElementsByClassName("fa-solid fa-trash-can");
+
+let formAddProject = document.getElementById("formAddProject");
+let categoryId = "";
+
+/***********************************************/
+
+// ------ DECLARATION DES FONCTIONS ----------//
+
+/***********************************************/
+
+// Fonction qui gère l'affichage des des works de la base de donné dans la modale. Elle fait appel à la fonction getwork qui gère la recupération des works de la base de donné puis elle inject en innerHtml le contenu dans la modale.
 
 const showWorksInModal = async () => {
   await getWorks();
@@ -145,13 +179,38 @@ const showWorksInModal = async () => {
   `
     )
     .join("");
-  const test = document.getElementsByClassName("fa-solid fa-trash-can");
-  for (item of test) {
-    let categoryID = "";
-    categoryID = item.getAttribute("id").slice(10, 120);
-    console.log(categoryID);
+};
+
+// fonction qui gère l'ouverture et la fermeture de la modale avec les eventlistener.
+
+const modalOpenAndClose = () => {
+  buttonModifyProject.addEventListener("click", function () {
+    modal.style.display = "flex";
+  });
+  buttonSendPicture.addEventListener("click", function () {
+    modalWorkUpload.style.display = "flex";
+  });
+  buttonCloseModalWorkUpload.addEventListener("click", function () {
+    modalWorkUpload.style.display = "none";
+    modal.style.display = "none";
+  });
+  buttonBackToModal.addEventListener("click", function () {
+    modalWorkUpload.style.display = "none";
+  });
+  buttonCloseModal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+};
+
+// fonction qui fait un appel DELETE à l'API pour supprimer des works. Elle tient compte de la categorie ID pour savoir quel Work supprimer.
+
+const allowWorkDelete = async () => {
+  await showWorksInModal();
+  for (item of buttonDelete) {
+    categoryId = item.getAttribute("id").slice(10, 120);
+    console.log(categoryId);
     item.addEventListener("click", function () {
-      fetch(`http://localhost:5678/api/works/${categoryID}`, {
+      fetch(`http://localhost:5678/api/works/${categoryId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -161,37 +220,9 @@ const showWorksInModal = async () => {
   }
 };
 
-const modalOpenAndClose = () => {
-  buttonModifyProject.addEventListener("click", function () {
-    modal.style.display = "flex";
-    buttonSendPicture.addEventListener("click", function () {
-      modalWorkUpload.style.display = "flex";
-    });
-    buttonCloseModalWorkUpload.addEventListener("click", function () {
-      modalWorkUpload.style.display = "none";
-      modal.style.display = "none";
-    });
-    buttonBackToModal.addEventListener("click", function () {
-      modalWorkUpload.style.display = "none";
-    });
-    showWorksInModal();
-  });
-  buttonCloseModal.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-};
+// fonction qui fait un appel POST à l'API pour ajouter des works. Utilisation ici d'un Objet FormData pour recuperer l'ensemble des donnés saisi dans le form par l'utilisateur.
 
-const sectionGallery2 = document.querySelector(".gallery2");
-
-modalOpenAndClose();
-
-/***************************************** Delete file  *****************************************/
-
-/***************************************** Uploade file  *****************************************/
-
-let formAddProject = document.getElementById("formAddProject");
-
-const postProject = () => {
+const allowPostProject = () => {
   formAddProject.addEventListener("submit", function (e) {
     e.preventDefault();
     const projectImage = document.getElementById("image").files[0];
@@ -215,4 +246,12 @@ const postProject = () => {
   });
 };
 
-postProject();
+/***********************************************/
+
+// ------ EXECUTION DES FONCTIONS ----------//
+
+/***********************************************/
+
+modalOpenAndClose();
+allowWorkDelete();
+allowPostProject();

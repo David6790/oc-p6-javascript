@@ -13,6 +13,8 @@ let token = "";
 
 /***********************************************/
 
+// fonction pour s'authentifier sur l'API afin d'obtenir le TOKEN. Utilisation d'un object FormData pour stocker les inputs email et passwords de l'input de l'utilisateur. Fetch avec methode post. Si les identifiant sont correct, enregirstrer le token dans le sessionStorage.
+
 const getToken = async () => {
   const userFormData = new FormData(formLogin);
   const userFormDataObj = {};
@@ -43,5 +45,11 @@ const userLogIn = () => {
     getToken();
   });
 };
+
+/***********************************************/
+
+// ------ Éxécution DES FONCTIONS ----------//
+
+/***********************************************/
 
 userLogIn();
