@@ -113,13 +113,15 @@
 			<button id="closeModalWorkUpload">X</button>
 			<div id="modalWorkUploadWrapper">
 				<h3>Ajout Photo</h3>
-				<form action="http://localhost:5678/api/works" method="post" id="formAddProject" enctype="multipart/form-data">
+				<form action="" method="post" id="formAddProject" enctype="multipart/form-data">
 					<div class="uploaderWrapper">
+						<img id="imagePreview" src="assets/images/1x1.png">
 						<div><i class="fa-regular fa-image"></i></div>
 						<button>+ Ajouter Photo</button>
 						<div class="uploaderText">jpg, png: 4 mo Max</div>
-						<input type="file" name="image" id="image" accept=".png, .jpeg">		
+						<input type="file" name="image" id="image" accept=".png, .jpeg">
 					</div>
+					
 					<label for="projectTitle">Titre</label>
 					<input type="text" name="title" id="title">
 					<label for="catagorySelect">Catégorie</label>

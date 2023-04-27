@@ -1,25 +1,14 @@
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
+/***********************************************************************************************************************/
 
-// ---------------------------------- FONCTIONALITÉ PAGE D'ACCEUIL -----------------------------------------------------------//
+// ------ DÉCLARATION DES VARIABLES LIÉES À L'AFFICHAGE DES WORKS ET USER-LOGIN----------//
 
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-
-/***********************************************/
-
-// ------ DÉCLARATION DES VARIABLES ----------//
-
-/***********************************************/
+/***********************************************************************************************************************/
 
 let workData = []; // array pour stocker la data du feth
 let workToDisplay = []; // array pour stocker les works à afficher à l'issu de la fonction showfilterwork()
 let selectedCategory = 0; // variable pour initialiser l'id de la catagorie du Work
 let userLoggedIn = sessionStorage.getItem("token"); // Varible pour stocker l'existence du token dans la session storage
 
-/*********** Poitage de tout les élements du Dom necessaire pour sa manipulation par les fonctions plus bas ***********/
 const sectionGallery = document.querySelector(".gallery");
 const boutonFiltre = document.querySelectorAll(".btn-filtre");
 const sectionFiltres = document.querySelector(".filtres");
@@ -29,11 +18,34 @@ const buttonModifyProject = document.getElementById("buttonModifyProject");
 const buttonLogIn = document.getElementById("buttonLogIn");
 const buttonLogOut = document.getElementById("buttonLogOut");
 
-/***********************************************/
+/***********************************************************************************************************************/
 
-// ------ DÉCLARATION DES FONCTIONS ----------//
+// ------ DÉCLARATION DES VARIABLES LIÉES AUX MODALS----------//
 
-/***********************************************/
+/***********************************************************************************************************************/
+
+let formAddProject = document.getElementById("formAddProject");
+let categoryId = "";
+
+const modal = document.getElementById("modal");
+const modalWorkUpload = document.getElementById("modalWorkUpload");
+const sectionGallery2 = document.querySelector(".gallery2");
+const buttonCloseModal = document.getElementById("closeModal");
+const buttonSendPicture = document.getElementById("sendPicture");
+const buttonCloseModalWorkUpload = document.getElementById(
+  "closeModalWorkUpload"
+);
+const buttonBackToModal = document.getElementById("backToModal");
+const buttonDelete = document.getElementsByClassName("fa-solid fa-trash-can");
+const stopPropagationClass = document.querySelector(".stopPropagation");
+const imageInput = document.getElementById("image");
+const imagePreview = document.getElementById("imagePreview");
+
+/***********************************************************************************************************************/
+
+// ------ DÉCLARATION DES FONCTIONS LIÉES À L'AFFICHAGE DES WORKS ET USER-LOGIN ----------//
+
+/***********************************************************************************************************************/
 
 // Fonction pour récuperer les données de manière global
 const getWorks = async () => {
@@ -115,58 +127,13 @@ const EndAdminSession = () => {
   });
 };
 
-/***********************************************/
+/***********************************************************************************************************************/
 
-// ------ Exécution des fonctions ----------//
+// ------ DÉCLARATION DES FONCTIONS LIÉES AUX MODALS ----------//
 
-/***********************************************/
-
-showWorks(); // un premier appel de la fonction showWorks pour afficher tout les travaux a l'ecran lors du chargement
-createFilterEventlistner(); // creation des eventListner
-changeConfiguration(); // chargement des config de disposition de la page
-EndAdminSession(); // possibilité de se deconnecter
-
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-
-// ----------------------------------------- FONCTIONALITÉS MODAL -----------------------------------------------------------//
-
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-/**************************************************************************************************************************/
-
-/***********************************************/
-
-// ------ DECLARATION DES VARIABLES ----------//
-
-/***********************************************/
-
-/*********** Poitage de tout les élements concernant la modal necessaires pour les fonctions plus bas ***********/
-const modal = document.getElementById("modal");
-const modalWorkUpload = document.getElementById("modalWorkUpload");
-const sectionGallery2 = document.querySelector(".gallery2");
-const buttonCloseModal = document.getElementById("closeModal");
-const buttonSendPicture = document.getElementById("sendPicture");
-const buttonCloseModalWorkUpload = document.getElementById(
-  "closeModalWorkUpload"
-);
-const buttonBackToModal = document.getElementById("backToModal");
-const buttonDelete = document.getElementsByClassName("fa-solid fa-trash-can");
-const stopPropagationClass = document.querySelector(".stopPropagation");
-let formAddProject = document.getElementById("formAddProject");
-let categoryId = "";
-
-/***********************************************/
-
-// ------ DECLARATION DES FONCTIONS ----------//
-
-/***********************************************/
+/***********************************************************************************************************************/
 
 // Fonction qui gère l'affichage des des works de la base de donné dans la modale. Elle fait appel à la fonction getwork qui gère la recupération des works de la base de donné puis elle inject en innerHtml le contenu dans la modale.
-const stopPropagation = (e) => {
-  e.stopPropagation();
-};
 const showWorksInModal = async () => {
   await getWorks();
   sectionGallery2.innerHTML = workData
@@ -183,8 +150,11 @@ const showWorksInModal = async () => {
     .join("");
 };
 
-// fonction qui gère l'ouverture et la fermeture de la modale avec les eventlistener.
-
+// fonction qui permet d'arreter la propagation d'un evenlistner. Notamment pour permettre de fermer le modal en cliquant à l'extérieur de celui ci.
+const stopPropagation = (e) => {
+  e.stopPropagation();
+};
+// fonction qui gère l'ouverture et la fermeture de la modale avec les eventlistener qui permettent de naviguer dans le modal.
 const modalOpenAndClose = () => {
   buttonModifyProject.addEventListener("click", function () {
     modal.style.display = "flex";
@@ -209,7 +179,6 @@ const modalOpenAndClose = () => {
 };
 
 // fonction qui fait un appel DELETE à l'API pour supprimer des works. Elle tient compte de la categorie ID pour savoir quel Work supprimer.
-
 const allowWorkDelete = async () => {
   await showWorksInModal();
   for (item of buttonDelete) {
@@ -227,7 +196,6 @@ const allowWorkDelete = async () => {
 };
 
 // fonction qui fait un appel POST à l'API pour ajouter des works. Utilisation ici d'un Objet FormData pour recuperer l'ensemble des donnés saisi dans le form par l'utilisateur.
-
 const allowPostProject = () => {
   formAddProject.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -252,12 +220,32 @@ const allowPostProject = () => {
   });
 };
 
+// fonction qui permet d'afficher un preview de l'image selectionné en input avant de faire le submit
+const getUploadPreview = () => {
+  imageInput.addEventListener("change", function () {
+    const projectImage = document.getElementById("image").files[0];
+    imagePreview.src = URL.createObjectURL(projectImage);
+  });
+};
+
 /***********************************************/
 
-// ------ EXECUTION DES FONCTIONS ----------//
+// ------ Exécution des fonctions affichage des works  ----------//
 
 /***********************************************/
 
-modalOpenAndClose();
-allowWorkDelete();
-allowPostProject();
+showWorks(); // un premier appel de la fonction showWorks pour afficher tout les travaux a l'ecran lors du chargement
+createFilterEventlistner(); // creation des eventListner
+changeConfiguration(); // chargement des config de disposition de la page
+EndAdminSession(); // possibilité de se deconnecter
+
+/***********************************************/
+
+// ------ Exécution des fonctions affichage des works  ----------//
+
+/***********************************************/
+
+modalOpenAndClose(); // permettre d'ouvre et fermer le modal
+allowWorkDelete(); // permettre de supprimer des works
+allowPostProject(); // permettre de publier des works
+getUploadPreview(); // permettre d'avoir une preview de ce qu'on upload comme image

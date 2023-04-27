@@ -449,7 +449,6 @@ footer nav ul {
 	background-color:#E8F1F6;
 	height: 169px;
 	width: 100%;
-	position: relative;
 	margin-top: 30px;
 	display: flex;
 	flex-direction: column;
@@ -525,3 +524,16 @@ footer nav ul {
 	border-bottom: 1px solid #B3B3B3;
 	margin-top: 40px;
 }
+
+#imagePreview{
+	
+	width: 180px;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	object-fit: cover;
+	display: flex;
+}
+
+
