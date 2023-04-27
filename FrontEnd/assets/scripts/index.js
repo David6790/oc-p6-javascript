@@ -153,7 +153,7 @@ const buttonCloseModalWorkUpload = document.getElementById(
 );
 const buttonBackToModal = document.getElementById("backToModal");
 const buttonDelete = document.getElementsByClassName("fa-solid fa-trash-can");
-
+const stopPropagationClass = document.querySelector(".stopPropagation");
 let formAddProject = document.getElementById("formAddProject");
 let categoryId = "";
 
@@ -164,7 +164,9 @@ let categoryId = "";
 /***********************************************/
 
 // Fonction qui gère l'affichage des des works de la base de donné dans la modale. Elle fait appel à la fonction getwork qui gère la recupération des works de la base de donné puis elle inject en innerHtml le contenu dans la modale.
-
+const stopPropagation = (e) => {
+  e.stopPropagation();
+};
 const showWorksInModal = async () => {
   await getWorks();
   sectionGallery2.innerHTML = workData
@@ -200,6 +202,10 @@ const modalOpenAndClose = () => {
   buttonCloseModal.addEventListener("click", function () {
     modal.style.display = "none";
   });
+  modal.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+  stopPropagationClass.addEventListener("click", stopPropagation);
 };
 
 // fonction qui fait un appel DELETE à l'API pour supprimer des works. Elle tient compte de la categorie ID pour savoir quel Work supprimer.
