@@ -4,7 +4,7 @@
 
 /***********************************************/
 
-let formLogin = document.getElementById("formLogin");
+const formLogin = document.getElementById("formLogin");
 let token = "";
 
 /***********************************************/
@@ -19,7 +19,6 @@ const getToken = async () => {
   const userFormData = new FormData(formLogin);
   const userFormDataObj = {};
   userFormData.forEach((value, key) => (userFormDataObj[key] = value));
-  console.log(userFormDataObj);
   let loginParam = {
     method: "POST",
     headers: {
@@ -30,9 +29,8 @@ const getToken = async () => {
   await fetch("http://localhost:5678/api/users/login", loginParam)
     .then((res) => res.json())
     .then((data) => (token = data.token));
-  console.log(token);
   if (token) {
-    sessionStorage.setItem("token", token);
+    localStorage.setItem("token", token);
     window.location.replace("./index.html");
   } else {
     alert("Identifiant ou mot de passe incorrect! ");

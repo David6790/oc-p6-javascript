@@ -5,12 +5,13 @@
 /***********************************************************************************************************************/
 
 let workData = []; // array pour stocker la data du feth
+let categoryData = [];
 let workToDisplay = []; // array pour stocker les works à afficher à l'issu de la fonction showfilterwork()
 let selectedCategory = 0; // variable pour initialiser l'id de la catagorie du Work
-let userLoggedIn = sessionStorage.getItem("token"); // Varible pour stocker l'existence du token dans la session storage
+let userLoggedIn = localStorage.getItem("token"); // Varible pour stocker l'existence du token dans la session storage
 
 const sectionGallery = document.querySelector(".gallery");
-const boutonFiltre = document.querySelectorAll(".btn-filtre");
+const buttonFiltre = document.querySelectorAll(".btn-filtre");
 const sectionFiltres = document.querySelector(".filtres");
 const modeEditionHeader = document.getElementById("modeEditionHeader");
 const buttonChangePicture = document.getElementById("buttonChangePicture");
@@ -25,7 +26,7 @@ const buttonLogOut = document.getElementById("buttonLogOut");
 /***********************************************************************************************************************/
 
 let formAddProject = document.getElementById("formAddProject");
-let categoryId = "";
+let workId = "";
 
 const modal = document.getElementById("modal");
 const modalWorkUpload = document.getElementById("modalWorkUpload");
@@ -53,6 +54,25 @@ const getWorks = async () => {
     .then((res) => res.json())
     .then((data) => (workData = data));
 };
+const getCategory = async () => {
+  await fetch("http://localhost:5678/api/categories")
+    .then((res) => res.json())
+    .then((data) => (categoryData = data));
+};
+
+const createFilter = async () => {
+  await getCategory();
+  sectionFiltres.innerHTML =
+    `<button class="btn-filtre" id="0">Tous</button>` +
+    categoryData
+      .map(
+        (category) =>
+          `
+    <button class="btn-filtre" id="${category.id}">${category.name}</button>
+    `
+      )
+      .join("");
+};
 
 // creation de la fonction showWork pour injecter dans le DOM les données fetché par la fonction getWork. Utilisation de la fonction map pour parcourir les résultats stocker dans la array workData et j'utilise les littéraux de gabarit ${} pour concaténer mon code HTML dans le innerHtml.
 const showWorks = async () => {
@@ -69,8 +89,17 @@ const showWorks = async () => {
     .join("");
 };
 
-// création d'une fonction qui permets de filtrer les travaux en fonction de la catégorie du projet et ensuite l'afficher à l'ecran.
-const showFilterWorks = (selectedCategory) => {
+const createFilterEventlistner = async () => {
+  await createFilter();
+  const buttonFiltre = document.querySelectorAll(".btn-filtre");
+  buttonFiltre.forEach((button) => {
+    button.addEventListener("click", function () {
+      showFilterWorks(parseInt(button.getAttribute("id")));
+    });
+  });
+};
+const showFilterWorks = async (selectedCategory) => {
+  await createFilterEventlistner();
   if (selectedCategory === 0) {
     workToDisplay = workData;
   } else {
@@ -88,15 +117,6 @@ const showFilterWorks = (selectedCategory) => {
   `
     )
     .join("");
-};
-// boucle forEach pour mettre des eventListner sur les boutons filtres en fonction de leur ID. Par ce bias, l'ordre dans lequel on intègre les bouton n'a plus d'incidence sur le eventlistner
-
-const createFilterEventlistner = () => {
-  boutonFiltre.forEach((button) => {
-    button.addEventListener("click", function () {
-      showFilterWorks(parseInt(button.getAttribute("id")));
-    });
-  });
 };
 
 // fonction pour determiner ce qu'on affiche ou ce qu'on retire de la page d'acceuil quand le token n'existe pas dans le sessionStorage donc utilisateur non connecté
@@ -122,7 +142,7 @@ const changeConfiguration = () => {
 // fonction pour permettre a l'administrateur de logout. On clear le session storage ou est stocké le token. Puis on force un reload de la page en question. La page se reloadera en configuration visiteur puisque le token n'existe plus dans la session storage.
 const EndAdminSession = () => {
   buttonLogOut.addEventListener("click", function () {
-    sessionStorage.clear();
+    localStorage.removeItem("token");
     window.location.reload();
   });
 };
@@ -182,13 +202,12 @@ const modalOpenAndClose = () => {
 const allowWorkDelete = async () => {
   await showWorksInModal();
   for (item of buttonDelete) {
-    categoryId = item.getAttribute("id").slice(10, 120);
-    console.log(categoryId);
+    workId = item.getAttribute("id").slice(10, 120);
     item.addEventListener("click", function () {
-      fetch(`http://localhost:5678/api/works/${categoryId}`, {
+      fetch(`http://localhost:5678/api/works/${workId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
     });
@@ -210,13 +229,11 @@ const allowPostProject = () => {
     let postParam = {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: workuploadFormData,
     };
-    fetch("http://localhost:5678/api/works", postParam).then((res) =>
-      console.log(res)
-    );
+    fetch("http://localhost:5678/api/works", postParam);
   });
 };
 
@@ -235,6 +252,8 @@ const getUploadPreview = () => {
 /***********************************************/
 
 showWorks(); // un premier appel de la fonction showWorks pour afficher tout les travaux a l'ecran lors du chargement
+getCategory();
+createFilter();
 createFilterEventlistner(); // creation des eventListner
 changeConfiguration(); // chargement des config de disposition de la page
 EndAdminSession(); // possibilité de se deconnecter
