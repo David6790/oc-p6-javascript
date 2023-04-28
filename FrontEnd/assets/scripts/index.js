@@ -4,8 +4,8 @@
 
 /***********************************************************************************************************************/
 
-let workData = []; // array pour stocker la data du feth
-let categoryData = [];
+let workData = []; // array pour stocker la data des works
+let categoryData = []; // array pour stocker les data des categories
 let workToDisplay = []; // array pour stocker les works à afficher à l'issu de la fonction showfilterwork()
 let selectedCategory = 0; // variable pour initialiser l'id de la catagorie du Work
 let userLoggedIn = localStorage.getItem("token"); // Varible pour stocker l'existence du token dans la session storage
@@ -48,18 +48,19 @@ const imagePreview = document.getElementById("imagePreview");
 
 /***********************************************************************************************************************/
 
-// Fonction pour récuperer les données de manière global
+// Fonction pour récuperer les works de manière global
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
     .then((res) => res.json())
     .then((data) => (workData = data));
 };
+// Fonction pour récuperer catégories de manière global
 const getCategory = async () => {
   await fetch("http://localhost:5678/api/categories")
     .then((res) => res.json())
     .then((data) => (categoryData = data));
 };
-
+// fonction pour créer dynamiquement les filtres des catégorie
 const createFilter = async () => {
   await getCategory();
   sectionFiltres.innerHTML =
@@ -73,8 +74,7 @@ const createFilter = async () => {
       )
       .join("");
 };
-
-// creation de la fonction showWork pour injecter dans le DOM les données fetché par la fonction getWork. Utilisation de la fonction map pour parcourir les résultats stocker dans la array workData et j'utilise les littéraux de gabarit ${} pour concaténer mon code HTML dans le innerHtml.
+// fonciton pour faire afficher les works de manière dynamique sur le DOM
 const showWorks = async () => {
   await getWorks();
   sectionGallery.innerHTML = workData
@@ -89,6 +89,7 @@ const showWorks = async () => {
     .join("");
 };
 
+// fonction pour créer les eventlistner sur les filtres générés sur le Dom
 const createFilterEventlistner = async () => {
   await createFilter();
   const buttonFiltre = document.querySelectorAll(".btn-filtre");
@@ -98,6 +99,8 @@ const createFilterEventlistner = async () => {
     });
   });
 };
+
+// fonction qui gère l'affichage des works sur le dom en fonction du filtre clické
 const showFilterWorks = async (selectedCategory) => {
   await createFilterEventlistner();
   if (selectedCategory === 0) {
@@ -119,7 +122,7 @@ const showFilterWorks = async (selectedCategory) => {
     .join("");
 };
 
-// fonction pour determiner ce qu'on affiche ou ce qu'on retire de la page d'acceuil quand le token n'existe pas dans le sessionStorage donc utilisateur non connecté
+// fonction pour determiner ce qu'on affiche ou ce qu'on retire de la page d'acceuil quand le token n'existe pas dans le LocalStorage donc utilisateur non connecté
 const visitorPageConfiguration = () => {
   modeEditionHeader.style.display = "none";
   buttonLogOut.remove();
@@ -140,7 +143,7 @@ const changeConfiguration = () => {
   }
 };
 // fonction pour permettre a l'administrateur de logout. On clear le session storage ou est stocké le token. Puis on force un reload de la page en question. La page se reloadera en configuration visiteur puisque le token n'existe plus dans la session storage.
-const EndAdminSession = () => {
+const endAdminSession = () => {
   buttonLogOut.addEventListener("click", function () {
     localStorage.removeItem("token");
     window.location.reload();
@@ -252,11 +255,9 @@ const getUploadPreview = () => {
 /***********************************************/
 
 showWorks(); // un premier appel de la fonction showWorks pour afficher tout les travaux a l'ecran lors du chargement
-getCategory();
-createFilter();
-createFilterEventlistner(); // creation des eventListner
+createFilterEventlistner(); // creation des eventListner sur les filtres pour afficher dynamiquement les travaux demandé
 changeConfiguration(); // chargement des config de disposition de la page
-EndAdminSession(); // possibilité de se deconnecter
+endAdminSession(); // possibilité de se deconnecter
 
 /***********************************************/
 
