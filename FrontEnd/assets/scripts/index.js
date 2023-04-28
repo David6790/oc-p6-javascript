@@ -248,6 +248,21 @@ const getUploadPreview = () => {
   });
 };
 
+const createInputCategories = async () => {
+  await getCategory();
+  const projectCategory = document.getElementById("category");
+  console.log(projectCategory);
+  projectCategory.innerHTML =
+    `<option value="">    </option>` +
+    categoryData
+      .map(
+        (category) =>
+          `
+        <option value="${category.id}">${category.name}</option>
+    `
+      )
+      .join("");
+};
 /***********************************************/
 
 // ------ Exécution des fonctions affichage des works  ----------//
@@ -267,5 +282,6 @@ endAdminSession(); // possibilité de se deconnecter
 
 modalOpenAndClose(); // permettre d'ouvre et fermer le modal
 allowWorkDelete(); // permettre de supprimer des works
+createInputCategories(); // generer dynamiquement les categories des inputs categories
 allowPostProject(); // permettre de publier des works
 getUploadPreview(); // permettre d'avoir une preview de ce qu'on upload comme image
