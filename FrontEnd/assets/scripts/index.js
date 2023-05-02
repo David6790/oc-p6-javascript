@@ -48,19 +48,19 @@ const imagePreview = document.getElementById("imagePreview");
 
 /***********************************************************************************************************************/
 
-// Fonction pour récuperer les works de manière global
+// Fonction pour récuperer les tout les works.
 const getWorks = async () => {
   await fetch("http://localhost:5678/api/works")
     .then((res) => res.json())
     .then((data) => (workData = data));
 };
-// Fonction pour récuperer catégories de manière global
+// Fonction pour récuperer les catégories des works
 const getCategory = async () => {
   await fetch("http://localhost:5678/api/categories")
     .then((res) => res.json())
     .then((data) => (categoryData = data));
 };
-// fonction pour créer dynamiquement les filtres des catégorie
+// fonction pour créer dynamiquement les filtres des catégories
 const createFilter = async () => {
   await getCategory();
   sectionFiltres.innerHTML =
